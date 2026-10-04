@@ -4,7 +4,6 @@ cd "${0:A:h}/.."
 mode=${1:-build}
 version=$(awk '/MARKETING_VERSION =/ {gsub(/;/, "", $3); print $3; exit}' secry.xcodeproj/project.pbxproj)
 out="$PWD/.build/release"
-app="$out/secry.app"
 archive="$out/secry-$version-macos-universal.zip"
 case "$mode" in
   build|signed) ;;
@@ -15,11 +14,13 @@ if [[ "$mode" == signed ]]; then
   : "${SECRY_NOTARY_PROFILE:?Set SECRY_NOTARY_PROFILE to a notarytool Keychain profile}"
 fi
 mkdir -p "$out"
+# Use a fresh path so repeated stapling does not reuse stale filesystem metadata.
+stage=$(mktemp -d "$out/staging.XXXXXX")
+app="$stage/secry.app"
 xcodebuild -project secry.xcodeproj -scheme secry -configuration Release \
   -destination 'generic/platform=macOS' -derivedDataPath .build/release-derived \
   ARCHS='arm64 x86_64' ONLY_ACTIVE_ARCH=NO CODE_SIGNING_ALLOWED=NO \
   ENABLE_HARDENED_RUNTIME=YES MARKETING_VERSION="$version" build
-rm -rf "$app"
 ditto .build/release-derived/Build/Products/Release/secry.app "$app"
 install -m 755 packaging/secry "$app/Contents/Resources/secry-cli"
 architectures=$(lipo -archs "$app/Contents/MacOS/secry")
