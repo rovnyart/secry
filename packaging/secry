@@ -1,0 +1,3 @@
+#!/bin/zsh
+# Resolve Homebrew's symlink before locating the app executable.
+exec "${0:A:h}/../MacOS/secry" --cli "$@"

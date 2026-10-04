@@ -1,0 +1,18 @@
+name: CI
+on:
+  push:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  build:
+    runs-on: macos-26
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build universal app and verify portable CLI
+        run: scripts/release.sh build
+      - name: Parser tests
+        run: |
+          mkdir -p .build/tests
+          xcrun swiftc secry/SecretParser.swift Tests/ParserTests.swift -o .build/tests/parser-tests
+          .build/tests/parser-tests
