@@ -47,3 +47,20 @@ For future automated releases, a macOS runner needs a temporary signing Keychain
 a Developer ID certificate/private key, and notarization credentials held in
 GitHub Actions secrets. Never commit these files or credentials. Local signing
 remains available without uploading a private key to CI.
+
+## Publish a subsequent release with one command
+
+Update `MARKETING_VERSION` in both Xcode configurations, write release notes,
+commit and push the source to `main`, and wait for CI. Then:
+
+```sh
+SECRY_SIGN_IDENTITY='Developer ID Application: YOUR NAME (TEAMID)' \
+SECRY_NOTARY_PROFILE=secry-notary \
+  scripts/publish.sh /path/to/release-notes.md /path/to/homebrew-secry
+```
+
+This runs local tests, builds/signs/notarizes, publishes a versioned GitHub Release,
+and updates the tap checksum and version. Both repositories must start clean on
+`main`. The signing key and notarization credentials remain in your Mac's Keychain.
+If an external publication step fails after the release exists, complete that step
+manually; the script refuses to overwrite an existing release.

@@ -33,8 +33,15 @@ values injected into its environment. No account. No server. No subscription.
 
 ## Install
 
-The first signed release is being prepared. Until the release and Homebrew cask
-are published, [build from source](#build-from-source).
+```sh
+brew install --cask rovnyart/secry/secry
+open -a secry
+```
+
+Homebrew installs both the menu bar app and the `secry` command. Or download the
+[signed and notarized app](https://github.com/rovnyart/secry/releases/latest),
+unzip it, and move `secry.app` to Applications. Update with
+`brew upgrade --cask secry`.
 
 Requires macOS 14 Sonoma or newer. The release build includes Apple Silicon and
 Intel architectures. Intel and macOS 14 runtime behavior have not yet been tested.

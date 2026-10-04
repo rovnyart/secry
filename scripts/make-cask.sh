@@ -16,7 +16,7 @@ cask "secry" do
   desc "Local Keychain vault with temporary secret access for developer tools"
   homepage "https://github.com/rovnyart/secry"
 
-  depends_on macos: ">= :sonoma"
+  depends_on macos: :sonoma
 
   app "secry.app"
   binary "#{appdir}/secry.app/Contents/Resources/secry-cli", target: "secry"
